@@ -7,7 +7,8 @@ title MySQL Dump batch file
 set ctime=%TIME:~0,2%
 if "%ctime:~0,1%" == " " (set ctime=0%ctime:~1,1%) 
 set ctime=%ctime%_%TIME:~3,2%_%TIME:~6,2%
-REM ----------------------------------------------------------------REM PASS=пароль DB=имясхемы HOST=хост БД LOG=логин БД
+REM ----------------------------------------------------------------
+REM PASS=пароль DB=имясхемы HOST=хост БД LOG=логин БД
 REM backuppath=путь_к_бэкапу
 REM backupcopypath=путь_к_копии_бэкапа (например, заранее
 REM                                     монтированный том)
@@ -22,52 +23,63 @@ set LOG=root
 
 set backuppath=D:\backup\db\
 set backupcopypath=Y:\backup\
-REM ----------------------------------------------------------------
+
 REM. > templog.txt
+
+
 echo MySQL Database Backup v0.1 >> templog.txt
-echo - - - - - - - - - - - - →> templog.txt
+echo -------------------------- >> templog.txt
 echo. >> templog.txt
+
 echo HOST:PORT @ USER = %HOST%:%PORT% @ %LOG% >> templog.txt
 echo Database tree name = %DB% >> templog.txt
-
+echo NAS mode = %NASMODE% (1 if active) >> templog.txt
 echo Backup path = %backuppath% >> templog.txt
 echo NAS Backup path = %backupcopypath% >> templog.txt
 echo. >> templog.txt
 echo %DATE% %TIME%: Backup Started >> templog.txt
+
 set ERRORLEVEL=0
 MD %backuppath% >> templog.txt
 echo %DATE% %TIME%: Creating backup directory: %ERRORLEVEL% (0 if done) >> templog.txt
 echo %DATE% %TIME%: Starting mysqldump >> templog.txt
 echo. >> templog.txt
-"C:\Program Files\MySQL\MySQL Server 5.6\bin\mysqldump.exe" -v - debug-info=TRUE - log-error=templog.txt - default-character-set=utf8 - host=%HOST% - port=%PORT% - user %LOG% - password=%PASS% %DB% > %backuppath%mysql_backup__%DB%__%dat%_%tim%.sql
-echo - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - →> templog.txt
+
+"C:\Program Files\MySQL\MySQL Server 5.6\bin\mysqldump.exe" -v --debug-info=TRUE --log-error=templog.txt --default-character-set=utf8 --host=%HOST% --port=%PORT% --user %LOG% --password=%PASS% %DB% > %backuppath%mysql_backup__%DB%__%dat%_%tim%.sql
+echo ------------------------------------------------------------------------------ >> templog.txt
 copy templog.txt %backuppath%mysql_bkplog__%DB%__%dat%_%tim%.txt
+
 echo %DATE% %TIME%: Creating 7zip archive >> templog.txt
 7za.exe a -t7z %backuppath%mysql_backup__%DB%__%dat%_%tim%.7z %backuppath%mysql_backup__%DB%__%dat%_%tim%.sql >> templog.txt
-echo - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - →> templog.txt
+echo ------------------------------------------------------------------------------ >> templog.txt
 7za.exe l %backuppath%mysql_backup__%DB%__%dat%_%tim%.7z >> templog.txt
-echo - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - →> templog.txt
+echo ------------------------------------------------------------------------------ >> templog.txt
 7za.exe t %backuppath%mysql_backup__%DB%__%dat%_%tim%.7z *.* >> templog.txt
-echo - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - →> templog.txt
+echo ------------------------------------------------------------------------------ >> templog.txt
 set ERRORLEVEL=0
+
 echo. >> templog.txt
 del %backuppath%mysql_backup__%DB%__%dat%_%tim%.sql >> templog.txt
 echo %DATE% %TIME% Deleting unarchived database file ERRORLEVEL is %ERRORLEVEL% (0 if done) >> templog.txt
 echo. >> templog.txt
 set ERRORLEVEL=0
-echo %DATE% %TIME%: Making reserve copy… >> templog.txt
+
+echo %DATE% %TIME%: Making reserve copy... >> templog.txt
 echo %DATE% %TIME%: Copying: %backuppath%mysql_bkplog__%DB%__%dat%_%tim%.txt TO: %backupcopypath%backuplog.txt >> templog.txt
-copy %backuppath%mysql_bkplog__%DB%__%dat%_%tim%.txt %backupcopypath%backuplog.txt >> templog.txt
+copy %backuppath%mysql_bkplog__%DB%__%dat%_%tim%.txt %backupcopypath%backuplog.txt  >> templog.txt
 echo %DATE% %TIME%: Copying: %backuppath%mysql_backup__%DB%__%dat%_%tim%.7z TO: %backupcopypath%mysql_backup.7z >> templog.txt
 copy %backuppath%mysql_backup__%DB%__%dat%_%tim%.7z %backupcopypath%mysql_backup.7z >> templog.txt
 echo %DATE% %TIME%: Making reserve copy ERRORLEVEL is %ERRORLEVEL% (0 if done) >> templog.txt
 echo. >> templog.txt
 set ERRORLEVEL=0
+
 copy templog.txt %backuppath%mysql_bkplog__%DB%__%dat%_%tim%.txt
 copy templog.txt %backupcopypath%backuplog.txt
+
 echo %DATE% %TIME%: Attempting to create log file: %ERRORLEVEL% (0 if done) >> templog.txt
 set ERRORLEVEL=0
-echo - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - →> templog.txt
+
+echo ------------------------------------------------------------------------------ >> templog.txt
 echo. >> templog.txt
 echo %DATE% %TIME%: Backup successfully DONE. >> templog.txt
 copy templog.txt %backuppath%mysql_bkplog__%DB%__%dat%_%tim%.txt
@@ -78,28 +90,29 @@ del templog.txt
 Следущий пример запаковывает расшаренную по сети папку (например, какие-нибудь файлы):
 ```bat
 REM. > templog1s.txt
+
 set ctime=%TIME:~0,2%
 if "%ctime:~0,1%" == " " (set ctime=0%ctime:~1,1%) 
 set ctime=%ctime%_%TIME:~3,2%_%TIME:~6,2%
 set tim=%ctime%
 set dat=%DATE%
 set ddtim=%dtime%
-REM ----------------------------------------------------------------
-REM backuppath = что бэкапим
-REM drivnetwork = что монтируем и куда бэкапим
-REM useracc/userpass=логин и пароль для доступа к drivnetwork
-set backuppath=D:\backup\1s\serverbuch
-set drivnetwork=\\192.168.0.3\1s_bases
-set useracc=backupuser
-set userpass=p@ssw0rd
-echo 1C Databases Backup v0.1 >> templog1s.txt
-echo - - - - - - - - - - - - →> templog1s.txt
+
+set backuppath=D:\backup\some\path
+set drivnetwork=\\192.168.1.3\somefolder
+set useracc=user
+set userpass=password
+
+echo Network Shared files backup >> templog1s.txt
+echo -------------------------- >> templog1s.txt
 echo. >> templog1s.txt
+
 echo Mounting network drive from %drivnetwork% >> templog1s.txt
 net use Y: %drivnetwork% /USER:%useracc% %userpass% >> templog1s.txt
 7za.exe a -t7z -mx1 -r -ssw -ms=on -mhe %backuppath%%dat%_%tim%.7z Y:\ >> templog1s.txt
-echo Removing network drive…
+echo Removing network drive...
 net use Y: /del /yes >> templog1s.txt
+
 echo backup complete, OK >> templog1s.txt
 copy templog1s.txt D:\backup\1s\log_%dat%_%tim%.txt >> templog1s.txt
 ```
@@ -107,28 +120,31 @@ copy templog1s.txt D:\backup\1s\log_%dat%_%tim%.txt >> templog1s.txt
 
 При желании, можно так же создать bat для очистки бэкапов и добавить его в планировщик (task scheduler), указав нужный интервал времени между запусками (раз в день/месяц/год). Не забудьте в настройках задания (create new task) выбрать "выполнять даже когда пользователь не вошел в систему". Пути указываете свои.
 ```bat
-REM. > templogdelnas.txt
+REM. > templognas.txt
+
 set ctime=%TIME:~0,2%
 if "%ctime:~0,1%" == " " (set ctime=0%ctime:~1,1%) 
 set ctime=%ctime%_%TIME:~3,2%_%TIME:~6,2%
 set tim=%ctime%
 set dat=%DATE%
 set ddtim=%dtime%
+
 set backuppath=\\NAS\BackupContainer
 set drivnetwork=\\NAS\BackupContainer
-set useracc=backupuser
-set userpass=p@ssw0rd
-echo NAS Clean v0.1 >> templogdelnas.txt
-echo - - - - - - - - - - - - →> templogdelnas.txt
-echo. >> templogdelnas.txt
-echo Mounting network drive from %drivnetwork% >> templogdelnas.txt
-net use Y: %drivnetwork% /USER:%useracc% %userpass% >> templogdelnas.txt
-del Y:\1s\ /F /Q >> templogdelnas.txt
-MD Y:\1s\ >> templogdelnas.txt
-del Y:\db\ /F /Q >> templogdelnas.txt
-MD Y:\db\ >> templogdelnas.txt
-echo Removing network drive…
-net use Y: /del /yes >> templogdelnas.txt
-echo backup complete, OK >> templogdelnas.txt
-copy templogdelnas.txt D:\backup\1s\log_%dat%_%tim%.txt >> templogdelnas.txt
+set useracc=user
+set userpass=password
+
+echo Backup to samba network folder >> templognas.txt
+echo -------------------------- >> templognas.txt
+echo. >> templognas.txt
+
+echo Mounting network drive from %drivnetwork% >> templognas.txt
+net use Y: %drivnetwork% /USER:%useracc% %userpass% >> templognas.txt
+copy D:\backup\1s\ Y:\1s\ >> templognas.txt
+copy D:\backup\db\ Y:\db\ >> templognas.txt
+echo Removing network drive...
+net use Y: /del /yes >> templognas.txt
+
+echo backup complete, OK >> templognas.txt
+copy templognas.txt D:\backup\1s\log_%dat%_%tim%.txt >> templognas.txt
 ```
