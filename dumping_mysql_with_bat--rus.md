@@ -45,7 +45,8 @@ echo %DATE% %TIME%: Creating backup directory: %ERRORLEVEL% (0 if done) >> templ
 echo %DATE% %TIME%: Starting mysqldump >> templog.txt
 echo. >> templog.txt
 
-"C:\Program Files\MySQL\MySQL Server 5.6\bin\mysqldump.exe" -v --debug-info=TRUE --log-error=templog.txt --default-character-set=utf8 --host=%HOST% --port=%PORT% --user %LOG% --password=%PASS% %DB% > %backuppath%mysql_backup__%DB%__%dat%_%tim%.sql
+"C:\Program Files\MySQL\MySQL Server 5.6\bin\mysqldump.exe" -v --debug-info=TRUE --log-error=templog.txt ^
+    --default-character-set=utf8 --host=%HOST% --port=%PORT% --user %LOG% --password=%PASS% %DB% > %backuppath%mysql_backup__%DB%__%dat%_%tim%.sql
 echo ------------------------------------------------------------------------------ >> templog.txt
 copy templog.txt %backuppath%mysql_bkplog__%DB%__%dat%_%tim%.txt
 
