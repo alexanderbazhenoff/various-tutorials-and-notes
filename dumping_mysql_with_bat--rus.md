@@ -1,5 +1,8 @@
-Когда-то мне нужно было периодически создавать резервные копии MySQL и пользовательских данных с помощью обычного bat.
-Качаем comandline-верисю 7za.exe и сохраняем в ту же папку, где и будет расположен batch comand sctipt. Этот bat сохраняет dump MySQL, запаковывает в 7zip и копирует на заранее смонтированный сетевой диск:
+# Создание бэкапа с помощью bat-скриптов
+
+Когда-то мне нужно было периодически создавать резервные копии MySQL и пользовательских данных с помощью обычного bat. Качаем [comandline-верисю 7za.exe](https://medium.com/r/?url=http%3A%2F%2Fwww.7-zip.org%2Fdownload.html) и сохраняем в ту же папку, где и будет расположен batch comand sctipt. Этот bat сохраняет dump MySQL, запаковывает в 7zip и копирует на заранее смонтированный сетевой диск:
+
+```bat
 title MySQL Dump batch file
 set ctime=%TIME:~0,2%
 if "%ctime:~0,1%" == " " (set ctime=0%ctime:~1,1%) 
@@ -70,9 +73,10 @@ echo %DATE% %TIME%: Backup successfully DONE. >> templog.txt
 copy templog.txt %backuppath%mysql_bkplog__%DB%__%dat%_%tim%.txt
 copy templog.txt %backupcopypath%backuplog.txt
 del templog.txt
-Результатом выполнения этого .bat файла будут две запакованные копии дампа MySQL и лог создания с датой в имени файла. Обязательно сверьте версию и место расположение фашего файла:
-C:\Program Files\MySQL\MySQL Server 5.6\bin\mysqldump.exe
-А вот так запаковываем расшаренную по сети папку (файловая база 1С "Предприятие", или какие-нибудь пользовательские файлы):
+```
+Результатом выполнения этого .bat файла будут две запакованные копии дампа MySQL и лог создания с датой в имени файла. Обязательно сверьте версию и место расположение фашего файла: `C:\Program Files\MySQL\MySQL Server 5.6\bin\mysqldump.exe`
+Следущий пример запаковывает расшаренную по сети папку (например, какие-нибудь файлы):
+```bat
 REM. > templog1s.txt
 set ctime=%TIME:~0,2%
 if "%ctime:~0,1%" == " " (set ctime=0%ctime:~1,1%) 
@@ -98,8 +102,11 @@ echo Removing network drive…
 net use Y: /del /yes >> templog1s.txt
 echo backup complete, OK >> templog1s.txt
 copy templog1s.txt D:\backup\1s\log_%dat%_%tim%.txt >> templog1s.txt
-Разумеется, перед этим папка backuppath должна быть доступна для чтения для пользователя под которым запускаем этот bat.
-При желании, можно так же создать bat для очистки бэкапов и добавить его в планировщик (task scheduler), указав нужный интервал времени между запусками (раз в день/месяц/год). Не забудьте в настройках задания (create new task) выбрать "выполнять даже когда пользователь не вошел в систему". Пути, разумеется, подставляеете свои.
+```
+Папка backuppath должна быть доступна для чтения для пользователя под которым запускаем этот bat.
+
+При желании, можно так же создать bat для очистки бэкапов и добавить его в планировщик (task scheduler), указав нужный интервал времени между запусками (раз в день/месяц/год). Не забудьте в настройках задания (create new task) выбрать "выполнять даже когда пользователь не вошел в систему". Пути указываете свои.
+```bat
 REM. > templogdelnas.txt
 set ctime=%TIME:~0,2%
 if "%ctime:~0,1%" == " " (set ctime=0%ctime:~1,1%) 
@@ -124,3 +131,4 @@ echo Removing network drive…
 net use Y: /del /yes >> templogdelnas.txt
 echo backup complete, OK >> templogdelnas.txt
 copy templogdelnas.txt D:\backup\1s\log_%dat%_%tim%.txt >> templogdelnas.txt
+```
