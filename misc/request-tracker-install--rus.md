@@ -319,6 +319,7 @@ To activate the new configuration, you need to run:
   service apache2 restart
 ```
 Активируем сайт rt:
+```
 # a2ensite rt
 
 Enabling site rt.
@@ -331,7 +332,7 @@ To activate the new configuration, you need to run:
 
 Syntax OK
 ```
-RT очень гибок по своим [настройкам](https://medium.com/r/?url=https%3A%2F%2Fdocs.bestpractical.com%2Frt%2F4.4.2%2FRT_Config.html). Но на начальном этапе достаточно добавить следующи строки:
+RT очень гибок по своим [настройкам](https://medium.com/r/?url=https%3A%2F%2Fdocs.bestpractical.com%2Frt%2F4.4.2%2FRT_Config.html). Но на начальном этапе достаточно добавить следующие строки:
 ```
 # nano /opt/rt4/etc/RT_SiteConfig.pm
 
