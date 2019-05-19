@@ -91,7 +91,9 @@ mysql> SHOW GRANTS FOR 'DentalSoft'@'%';
 Grants for DentalSoft@%
 +------------------------------------------------------------------+
 GRANT ALL PRIVILEGES ON *.* TO 'DentalSoft'@'%' IDENTIFIED BY PASSWORD '*0DC3BCF65D8832D42E3856FEF31D25647E8FA3DD'
+```
 Не выходя из консоли MySQL, cоздаем пустую БД и смотрим её параметры:
+```
 mysql> CREATE DATABASE dental_soft;
 mysql> SHOW CREATE DATABASE dental_soft;
 ```
