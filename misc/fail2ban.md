@@ -1,14 +1,14 @@
 # fail2ban config examples
 
-Ubuntu/Debian install:
+#### Ubuntu/Debian install:
 ```
 # apt install fail2ban
 # systemctl enable fail2ban
 ```
-Configure:
-```
-cat /etc/fail2ban/jail.local
+#### Configure:
 
+/etc/fail2ban/jail.local
+```
 [DEFAULT] ignoreip = 127.0.0.1/8 ::1
 bantime = 3600
 findtime = 1800
@@ -40,9 +40,9 @@ bantime = 300
 #action = iptables-dos[name=http, port=http, protocol=all]
 action = iptables-allports[name=http-ddos, protocol=all]
 
-
-cat /etc/fail2ban/filter.d/http-ddos
-
+```
+/etc/fail2ban/filter.d/http-ddos
+```
 # Fail2Ban configuration file
 #
 # Author: http://www.adminhelp.pro
@@ -61,9 +61,9 @@ failregex = ^<HOST> -.*"(GET|POST).*
 #
 ignoreregex =
 
-
-cat /etc/fail2ban/action.d/iptables-dos.conf
-
+```
+/etc/fail2ban/action.d/iptables-dos.conf
+```
 # Fail2Ban configuration file
 #
 # Author: Cyril Jaquier and http://www.adminhelp.pro
@@ -141,7 +141,7 @@ protocol = tcp
 # Values: STRING Default: INPUT
 chain = INPUT
 ```
-Start fail2ban and watch stats:
+#### Start fail2ban and check stats:
 ```
 systemctl start fail2ban
 
