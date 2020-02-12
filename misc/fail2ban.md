@@ -41,7 +41,7 @@ bantime = 300
 action = iptables-allports[name=http-ddos, protocol=all]
 
 ```
-/etc/fail2ban/filter.d/http-ddos
+/etc/fail2ban/filter.d/http-ddos.conf
 ```
 # Fail2Ban configuration file
 #
