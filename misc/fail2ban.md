@@ -1,5 +1,7 @@
 # fail2ban config examples
 
+tags: [[linux]], [[debian]], [[ubuntu]], [[fail2ban]]
+
 #### Ubuntu/Debian install:
 ```
 # apt install fail2ban
